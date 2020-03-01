@@ -117,7 +117,7 @@ var parkingIcon = L.icon({
 
 // Define overlay layers
 var merch = L.esri.featureLayer({
-    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/2',
+    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/2',
     minZoom: 15,
     pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
@@ -129,7 +129,7 @@ merch.bindPopup(function (layer) {
     return L.Util.template('<p><strong>{name} - Section {section}</strong></p>', layer.feature.properties);
 });
 var food = L.esri.featureLayer({
-    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/3',
+    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/3',
     minZoom: 15,
     pointToLayer: function (feature, latlng) {
         if (feature.properties.type == 'Snacks') {
@@ -173,7 +173,7 @@ food.bindPopup(function (layer) {
     return L.Util.template('<p><strong>{name} - {type} - Section {section}</strong></p>', layer.feature.properties);
 });
 var beer = L.esri.featureLayer({
-    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/4',
+    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/4',
     minZoom: 15,
     pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
@@ -185,7 +185,7 @@ beer.bindPopup(function (layer) {
     return L.Util.template('<p><strong>{name} - Section {section} - Beer Brands: {brands}</strong></p>', layer.feature.properties);
 });
 var restrooms = L.esri.featureLayer({
-    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/5',
+    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/5',
     minZoom: 15,
     pointToLayer: function (feature, latlng) {
         if (feature.properties.type == 'Mens') {
@@ -211,7 +211,7 @@ restrooms.bindPopup(function (layer) {
 var sectionsGroup = L.featureGroup();
 var sectionsLabels = L.featureGroup();
 var sections = L.esri.featureLayer({
-    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/7',
+    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/7',
     minZoom: 14,
     style: {
         color: 'red',
@@ -237,7 +237,7 @@ sections.bindPopup(function (layer) {
 });
 sectionsGroup.addTo(map);
 var gate = L.esri.featureLayer({
-    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/1',
+    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/1',
     minZoom: 15,
     pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
@@ -249,7 +249,7 @@ gate.bindPopup(function (layer) {
     return L.Util.template('<p><strong>{name}</strong></p>', layer.feature.properties);
 });
 var publicTrans = L.esri.featureLayer({
-    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/0',
+    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/0',
     minZoom: 14,
     pointToLayer: function(feature, latlng) {
         if (feature.properties.type == 'Metrorail') {
@@ -275,7 +275,7 @@ publicTrans.bindPopup(function (layer) {
 var parkingGroup = L.featureGroup();
 var parkingPoint = L.featureGroup();
 var parkingPoly = L.esri.featureLayer({
-    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/6',
+    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/6',
     minZoom: 14,
     style: {
         color: 'black',
@@ -299,7 +299,7 @@ parkingGroup.addTo(map);
 var parkGroup = L.featureGroup();
 var parkPoint = L.featureGroup();
 var parkBoundary = L.esri.featureLayer({
-    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/8',
+    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/8',
     style: {
         color: 'red',
         fillOpacity: '0.05',
@@ -409,7 +409,7 @@ var searchControl = L.esri.Geocoding.geosearch({
     providers: [
         // arcgisOnline, // Address geocoder
         L.esri.Geocoding.featureLayerProvider({
-            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/2',
+            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/2',
             searchFields: ['tags', 'name'],
             label: 'Merchandise',
             maxResults: 100,
@@ -419,7 +419,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
-            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/3',
+            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/3',
             searchFields: ['tags', 'name', 'type'],
             label: 'Food',
             maxResults: 100,
@@ -429,7 +429,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
-            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/4',
+            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/4',
             searchFields: ['tags', 'name', 'brands'],
             label: 'Beer',
             maxResults: 100,
@@ -439,7 +439,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
-            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/5',
+            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/5',
             searchFields: ['tags', 'type'],
             label: 'Restrooms',
             maxResults: 100,
@@ -449,7 +449,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
-            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/6',
+            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/7',
             searchFields: ['tags', 'section', 'location'],
             label: 'Seating Sections',
             maxResults: 100,
@@ -459,7 +459,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
-            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/1',
+            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/1',
             searchFields: ['tags', 'name'],
             label: 'Gates',
             maxResults: 100,
@@ -469,7 +469,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
-            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/0',
+            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/0',
             searchFields: ['tags', 'name', 'type'],
             label: 'Public Transportation',
             maxResults: 100,
@@ -479,7 +479,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
-            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/7',
+            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/6',
             searchFields: ['tags', 'name'],
             label: 'Parking',
             maxResults: 100,
