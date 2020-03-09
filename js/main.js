@@ -1,534 +1,454 @@
-/* Kevin Palmer, UW-Madison, GEOG777, Fall 2019, Project 2 */
+/* Kevin Palmer, UW-Madison, GEOG778, Spring 2020 */
 
+// Classes from ArcGIS API for Javascript 4.14
+require([
+    "esri/Map",
+    "esri/views/MapView",
+    "esri/Basemap",
+    "esri/layers/VectorTileLayer",
+    "esri/widgets/Home",
+    "esri/widgets/Locate",
+    "esri/widgets/Expand",
+    "esri/widgets/BasemapToggle",
+    "esri/widgets/BasemapGallery",
+    "esri/widgets/LayerList",
+    "esri/widgets/Search",
+    "esri/widgets/ScaleBar",
+    "esri/layers/FeatureLayer",
+],
+// Main Function
+function(Map, MapView, Basemap, VectorTileLayer, Home, Locate, Expand, BasemapToggle, BasemapGallery, LayerList, Search, ScaleBar, FeatureLayer) {
+    // Colored Pencils Basemap (Vector Tiles)
+    // var basemap = new Basemap({
+    //     baseLayers: [
+    //         new VectorTileLayer({
+    //             portalItem: {
+    //                 id: "4cf7e1fb9f254dcda9c8fbadb15cf0f8" // Colored Pencil Basemap
+    //             }
+    //         })
+    //     ]
+    // });
+    //
+    // var map = new Map({
+    //     basemap: basemap
+    // });
 
-// Define the map div
-var map = L.map('map', {
-    zoomControl: false, // disable default leaflet zoom controls
-    center: [38.872778, -77.0075],
-    zoom: 13,
-    minZoom: 12,
-    maxZoom: 19,
-});
-
-
-// Add zoom home button
-// https://github.com/torfsen/leaflet.zoomhome
-var zoomHome = L.Control.zoomHome();
-zoomHome.addTo(map);
-
-
-// Add locator button
-// https://github.com/domoritz/leaflet-locatecontrol
-L.control.locate().addTo(map);
-
-
-// Define basemap tilesets
-var streets = L.esri.basemapLayer(('Streets'), {
-    // detectRetina: true,
-    maxZoom: 21,
-}).addTo(map); //Default basemap is streets
-var imagery = L.esri.basemapLayer(('Imagery'), {
-    // detectRetina: true,
-    maxZoom: 21,
-});
-
-
-// Define basemap tileset layers
-var baseMaps = {
-    "Street Map": streets,
-    "Imagery": imagery
-};
-
-
-// Define Marker Icons
-var natsIcon = L.icon({
-    iconUrl: 'img/Washington-Nationals-Marker.svg',
-    iconSize: [45, 45] 
-});
-var merchIcon = L.icon({
-    iconUrl: 'img/clothing-store-15.svg',
-    iconSize: [25, 25]
-});
-var snacksIcon = L.icon({
-    iconUrl: 'img/confectionery-15.svg',
-    iconSize: [25, 25]
-});
-var grillIcon = L.icon({
-    iconUrl: 'img/fast-food-15.svg',
-    iconSize: [25, 25]
-});
-var vegetarianIcon = L.icon({
-    iconUrl: 'img/garden-15.svg',
-    iconSize: [25, 25]
-});
-var iceCreamIcon = L.icon({
-    iconUrl: 'img/ice-cream-15.svg',
-    iconSize: [25, 25]
-});
-var premiumIcon = L.icon({
-    iconUrl: 'img/restaurant-15.svg',
-    iconSize: [25, 25]
-});
-var pizzaIcon = L.icon({
-    iconUrl: 'img/restaurant-pizza-15.svg',
-    iconSize: [25, 25]
-});
-var seafoodIcon = L.icon({
-    iconUrl: 'img/restaurant-seafood-15.svg',
-    iconSize: [25, 25]
-});
-var beerIcon = L.icon({
-    iconUrl: 'img/beer-15.svg',
-    iconSize: [25, 25]
-});
-var toiletManIcon = L.icon({
-    iconUrl: 'img/toilet-man-15.svg',
-    iconSize: [20, 20]
-});
-var toiletWomanIcon = L.icon({
-    iconUrl: 'img/toilet-woman-15.svg',
-    iconSize: [20, 20]
-});
-var toiletFamilyIcon = L.icon({
-    iconUrl: 'img/toilet-family-15.svg',
-    iconSize: [20, 20]
-});
-var gateIcon = L.icon({
-    iconUrl: 'img/roadblock-15.svg',
-    iconSize: [20,20]
-});
-var metroIcon = L.icon({
-    iconUrl: 'img/rail-15.svg',
-    iconSize:[20,20]
-});
-var bikeIcon = L.icon({
-    iconUrl: 'img/bicycle-share-15.svg',
-    iconSize: [20, 20]
-});
-var waterTaxiIcon = L.icon({
-    iconUrl: 'img/ferry-15.svg',
-    iconSize: [20, 20]
-});
-var parkingIcon = L.icon({
-    iconUrl: 'img/parking-15.svg',
-    iconSize: [18, 18]
-});
-
-
-// Define overlay layers
-var merch = L.esri.featureLayer({
-    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/2',
-    minZoom: 15,
-    pointToLayer: function (feature, latlng) {
-        return L.marker(latlng, {
-            icon: merchIcon
-        });
-    }
-});
-merch.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>{name} - Section {section}</strong></p>', layer.feature.properties);
-});
-var food = L.esri.featureLayer({
-    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/3',
-    minZoom: 15,
-    pointToLayer: function (feature, latlng) {
-        if (feature.properties.type == 'Snacks') {
-            return L.marker(latlng, {
-                icon: snacksIcon
-            });
-        }
-        if (feature.properties.type == 'Grill') {
-            return L.marker(latlng, {
-                icon: grillIcon
-            });
-        }
-        if (feature.properties.type == 'Vegetarian') {
-            return L.marker(latlng, {
-                icon: vegetarianIcon
-            });
-        }
-        if (feature.properties.type == 'Ice Cream') {
-            return L.marker(latlng, {
-                icon: iceCreamIcon
-            });
-        }
-        if (feature.properties.type == 'Premium') {
-            return L.marker(latlng, {
-                icon: premiumIcon
-            });
-        }
-        if (feature.properties.type == 'Pizza') {
-            return L.marker(latlng, {
-                icon: pizzaIcon
-            });
-        }
-        if (feature.properties.type == 'Seafood') {
-            return L.marker(latlng, {
-                icon: seafoodIcon
-            });
-        }
-    }
-});
-food.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>{name} - {type} - Section {section}</strong></p>', layer.feature.properties);
-});
-var beer = L.esri.featureLayer({
-    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/4',
-    minZoom: 15,
-    pointToLayer: function (feature, latlng) {
-        return L.marker(latlng, {
-            icon: beerIcon
-        });
-    }
-});
-beer.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>{name} - Section {section} - Beer Brands: {brands}</strong></p>', layer.feature.properties);
-});
-var restrooms = L.esri.featureLayer({
-    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/5',
-    minZoom: 15,
-    pointToLayer: function (feature, latlng) {
-        if (feature.properties.type == 'Mens') {
-            return L.marker(latlng, {
-                icon: toiletManIcon
-            });
-        }
-        if (feature.properties.type == 'Womens') {
-            return L.marker(latlng, {
-                icon: toiletWomanIcon
-            });
-        }
-        if (feature.properties.type == 'Family') {
-            return L.marker(latlng, {
-                icon: toiletFamilyIcon
-            });
-        }
-    }
-});
-restrooms.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>{type} Restroom - Section {section}</strong></p>', layer.feature.properties);
-});
-var sectionsGroup = L.featureGroup();
-var sectionsLabels = L.featureGroup();
-var sections = L.esri.featureLayer({
-    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/7',
-    minZoom: 14,
-    style: {
-        color: 'red',
-        fillOpacity: '0.25',
-        weight: '1'
-    },
-    minZoom: 15,
-    onEachFeature: function (feature, layer) {
-        var bounds = layer.getBounds();
-        var center = bounds.getCenter();
-        var label = L.tooltip({
-            permanent: true,
-            direction: 'center',
-            className: 'sectionText'
-        })
-        .setContent(feature.properties.section)
-        .setLatLng(center);
-        label.addTo(sectionsLabels);
-    }
-}).addTo(sectionsGroup);
-sections.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>Section: {section}</strong></p>', layer.feature.properties);
-});
-sectionsGroup.addTo(map);
-var gate = L.esri.featureLayer({
-    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/1',
-    minZoom: 15,
-    pointToLayer: function (feature, latlng) {
-        return L.marker(latlng, {
-            icon: gateIcon
-        });
-    }
-}).addTo(map);
-gate.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>{name}</strong></p>', layer.feature.properties);
-});
-var publicTrans = L.esri.featureLayer({
-    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/0',
-    minZoom: 14,
-    pointToLayer: function(feature, latlng) {
-        if (feature.properties.type == 'Metrorail') {
-            return L.marker (latlng, {
-                icon: metroIcon
-            });
-        }
-        if (feature.properties.type == 'Bikeshare') {
-            return L.marker(latlng, {
-                icon: bikeIcon
-            });
-        }
-        if (feature.properties.type == 'Water Taxi') {
-            return L.marker(latlng, {
-                icon: waterTaxiIcon
-            });
-        }
-    }
-}).addTo(map);
-publicTrans.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>{name}</strong></p>', layer.feature.properties);
-});
-var parkingGroup = L.featureGroup();
-var parkingPoint = L.featureGroup();
-var parkingPoly = L.esri.featureLayer({
-    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/6',
-    minZoom: 14,
-    style: {
-        color: 'black',
-        fillOpacity: '0.25',
-        weight: '1'
-    },
-    onEachFeature: function (feature, layer) {
-        var bounds = layer.getBounds();
-        var center = bounds.getCenter();
-        var marker = L.marker(center, {
-            icon: parkingIcon,
-            clickable: false // This doesn't seem to work
-        }).addTo(parkingPoint);
-    }
-}).addTo(parkingGroup);
-parkingPoly.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>{name}</strong></p>', layer.feature.properties);
-});
-parkingPoint.addTo(parkingGroup);
-parkingGroup.addTo(map);
-var parkGroup = L.featureGroup();
-var parkPoint = L.featureGroup();
-var parkBoundary = L.esri.featureLayer({
-    url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/8',
-    style: {
-        color: 'red',
-        fillOpacity: '0.05',
-        weight: '.75'
-    },
-    onEachFeature: function (feature, layer) {
-        var bounds = layer.getBounds();
-        var center = bounds.getCenter();
-        var marker = L.marker(center, {
-            icon: natsIcon,
-        }).addTo(parkPoint);
-    }
-}).addTo(parkGroup);
-parkGroup.addTo(map);
-parkPoint.addTo(map);
-
-
-// Min zoom control for section labels
-// https://gis.stackexchange.com/questions/182628/leaflet-layers-on-different-zoom-levels-how
-map.on('zoomend', function () {
-    var zoomlevel = map.getZoom();
-    if (zoomlevel < 19) {
-        if (sectionsGroup.hasLayer(sectionsLabels)) {
-            sectionsGroup.removeLayer(sectionsLabels);
-        } else {
-            console.log("No layer active")
-        }
-    }
-    if (zoomlevel >= 19) {
-        if (sectionsGroup.hasLayer(sectionsLabels)) {
-            console.log("Layer already added");
-        } else {
-            sectionsGroup.addLayer(sectionsLabels);
-        }
-    }
-    if (zoomlevel < 14) {
-        if (map.hasLayer(parkingPoint)) {
-            map.removeLayer(parkingPoint);
-        } else {
-            console.log("No layer active")
-        }
-    }
-    if (zoomlevel >= 14) {
-        if (map.hasLayer(parkingPoint)) {
-            console.log("Layer already added");
-        } else {
-            map.addLayer(parkingPoint);
-        }
-    }
-    if (zoomlevel >= 14) {
-        if (map.hasLayer(parkPoint)) {
-            map.removeLayer(parkPoint);
-        } else {
-            console.log("No layer active")
-        }
-    }
-    if (zoomlevel < 14) {
-        if (map.hasLayer(parkPoint)) {
-            console.log("Layer already added");
-        } else {
-            map.addLayer(parkPoint);
-        }
-    }
-    console.log("Current Zoom Level = " + zoomlevel);
-});
-
-
-// Define overlay layers
-var groupedOverlays = {
-    "Concessions and Restrooms": {
-        "Merchandise": merch,
-        "Food": food,
-        "Craft Beer": beer,
-        "Restrooms": restrooms
-    },
-    "Seats, Gates, Transportation": {
-        "Seat Sections": sectionsGroup,
-        "Gates": gate,
-        "Public Transportation": publicTrans,
-        "Parking": parkingGroup,
-        "Nats Park Boundary": parkBoundary
-    }
-};
-
-
-// Add basemap/overlay layers control to the map
-// https://github.com/ismyrnow/leaflet-groupedlayercontrol
-var layerControl = L.control.groupedLayers(baseMaps, groupedOverlays);
-layerControl.addTo(map);
-$('<p class = "controlHeader" style="margin-bottom: 8px"><b>Basemaps</b></p>').insertBefore('div.leaflet-control-layers-base');
-
-
-// Search Control
-// https://esri.github.io/esri-leaflet/examples/geocoding-control.html
-// http://esri.github.io/esri-leaflet/api-reference/controls/geosearch.html
-// https://esri.github.io/esri-leaflet/examples/search-feature-layer.html
-// var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
-
-// NOTE:  "searchFields" seems to only work with string fields
-
-var searchControl = L.esri.Geocoding.geosearch({
-    position: 'bottomright',
-    useMapBounds: false,
-    collapseAfterResult: false,
-    expanded: true,
-    placeholder: 'Search here for things (food, beer, restrooms, etc.)',
-    providers: [
-        // arcgisOnline, // Address geocoder
-        L.esri.Geocoding.featureLayerProvider({
-            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/2',
-            searchFields: ['tags', 'name'],
-            label: 'Merchandise',
-            maxResults: 100,
-            bufferRadius: 50,
-            formatSuggestion: function (feature) {
-                return feature.properties.name + " - Section " + feature.properties.section + " - " + feature.properties.concourse + " Concourse"
-            }
-        }),
-        L.esri.Geocoding.featureLayerProvider({
-            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/3',
-            searchFields: ['tags', 'name', 'type'],
-            label: 'Food',
-            maxResults: 100,
-            bufferRadius: 50,
-            formatSuggestion: function (feature) {
-                return feature.properties.name + " - " + feature.properties.type + " - Section " + feature.properties.section + " - " + feature.properties.concourse + " Concourse"
-            }
-        }),
-        L.esri.Geocoding.featureLayerProvider({
-            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/4',
-            searchFields: ['tags', 'name', 'brands'],
-            label: 'Beer',
-            maxResults: 100,
-            bufferRadius: 50,
-            formatSuggestion: function (feature) {
-                return feature.properties.name + " - Section " + feature.properties.section + " - " + feature.properties.concourse + " Concourse"
-            }
-        }),
-        L.esri.Geocoding.featureLayerProvider({
-            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/5',
-            searchFields: ['tags', 'type'],
-            label: 'Restrooms',
-            maxResults: 100,
-            bufferRadius: 50,
-            formatSuggestion: function (feature) {
-                return feature.properties.type + " - Section " + feature.properties.section
-            }
-        }),
-        L.esri.Geocoding.featureLayerProvider({
-            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/7',
-            searchFields: ['tags', 'section', 'location'],
-            label: 'Seating Sections',
-            maxResults: 100,
-            bufferRadius: 50,
-            formatSuggestion: function (feature) {
-                return feature.properties.section + " - " + feature.properties.location + " - " + feature.properties.concourse + " Concourse"
-            }
-        }),
-        L.esri.Geocoding.featureLayerProvider({
-            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/1',
-            searchFields: ['tags', 'name'],
-            label: 'Gates',
-            maxResults: 100,
-            bufferRadius: 50,
-            formatSuggestion: function (feature) {
-                return feature.properties.name
-            }
-        }),
-        L.esri.Geocoding.featureLayerProvider({
-            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/0',
-            searchFields: ['tags', 'name', 'type'],
-            label: 'Public Transportation',
-            maxResults: 100,
-            bufferRadius: 50,
-            formatSuggestion: function (feature) {
-                return feature.properties.name + " - " + feature.properties.type
-            }
-        }),
-        L.esri.Geocoding.featureLayerProvider({
-            url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/6',
-            searchFields: ['tags', 'name'],
-            label: 'Parking',
-            maxResults: 100,
-            bufferRadius: 50,
-            formatSuggestion: function (feature) {
-                return feature.properties.name
-            }
-        })
-    ]
-}).addTo(map);
-
-
-// Leaflet easy button
-// https://github.com/CliffCloud/Leaflet.EasyButton
-L.easyButton('fa-star', function () {
-    alert('You just clicked the star button.\n\nThe submit review functionality is currently in development and not yet ready for use.\n\nUntil then...Make a wish!  A curly "W" maybe?');
-}).addTo(map);
-
-
-// Level/Concourse Control
-// https://esri.github.io/esri-leaflet/examples/indoors.html
-// Run a query against our Feature Layer (that we have not added to the map) to get a FeatureCollection (https://tools.ietf.org/html/rfc7946#section-3.3)
-sections.query().run(function (error, featureCollection) {
-    if (error) {
-        return;
-    }
-
-    // console.log(featureCollection);
-    var indoorLayer = new L.Indoor(featureCollection, {
-        getLevel: function (feature) {
-            // console.log(feature.properties.level);
-            return feature.properties.level;
-        }
-    });
-    // set the initial level to show
-    indoorLayer.setLevel(1);
-    // indoorLayer.addTo(map);
-
-    // Add Level Control (code from https://github.com/cbaines/leaflet-indoor)
-    var levelControl = new L.Control.Level({
-        level: 1,
-        levels: [1,2,3,4],
-        position: "topleft"
+    // Basemap
+    var map = new Map({
+        basemap: "streets"
     });
 
-    // Connect the level control to the indoor layer
-    // levelControl.addEventListener('levelchange', indoorLayer.setLevel, indoorLayer); // Disabled while in development
-    levelControl.addEventListener('levelchange', function() {
-       alert('You just clicked a level change control button.\n\nThe level change functionality is currently in development and not yet ready for use.\n\nUntil then please continue to enjoy using and exploring this app for the first level/main concourse.') 
+    // View
+    var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [-77.0075, 38.872778], // latitude, longitude
+        zoom: 14,
+        minZoom: 12,
+        maxZoom: 19
     });
-    levelControl.addTo(map);
+
+    // Home Widget
+    var homeWidget = new Home({
+       view: view
+    });
+    view.ui.add(homeWidget, "top-left");
+
+    // Locate Widget
+    var locateWidget = new Locate({
+       view: view
+    });
+    view.ui.add(locateWidget, "top-left");
+
+    // Basemap Toggle Widget
+    var basemapToggle = new BasemapToggle({
+       view: view,
+       nextBasemap: "satellite"
+    });
+    var basemapToggleExpand = new Expand({
+       view: view,
+       content: basemapToggle
+    });
+    view.ui.add(basemapToggleExpand, "top-right");
+
+    // Basemap Gallery Widget
+    var basemapGallery = new BasemapGallery({
+        view: view,
+        source: {
+            portal: {
+                url: "https://www.arcgis.com",
+                useVectorBasemaps: true //Load vector tile basemaps
+            }
+        }
+    });
+    var basemapGalleryExpand = new Expand({
+       view: view,
+       content: basemapGallery
+    });
+    view.ui.add(basemapGalleryExpand, "top-right");
+
+    // LayerList Widget
+    var layerList = new LayerList({
+       view: view
+    });
+    var layerListExpand = new Expand({
+       view: view,
+       content: layerList
+    });
+    view.ui.add(layerListExpand, {
+       position: "top-right"
+    });
+
+    // Legend Widget???
+    // https://developers.arcgis.com/javascript/latest/sample-code/widgets-legend/index.html
+    // https://developers.arcgis.com/javascript/latest/sample-code/widgets-legend-card/index.html
+
+    // Search Widget
+    var search = new Search({
+       view: view
+    });
+    var searchExpand = new Expand({
+       view: view,
+       content: search
+    });
+    view.ui.add(searchExpand, "top-left");
+
+    // ScaleBar Widget
+    var scaleBar = new ScaleBar({
+       view: view
+    });
+    view.ui.add(scaleBar, "bottom-right");
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Define Overlay Layers
+    //------------------------------------------------------------------------------------------------------------------
+    // Define Marker Icons
+    var natsIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: 'img/Washington-Nationals-Marker.svg',
+            width: "45px",
+            height: "45px"
+        }
+    };
+    var merchIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/clothing-store-15.svg",
+            width: "25px",
+            height: "25px"
+        }
+    };
+    var snacksIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/confectionery-15.svg",
+            width: "25px",
+            height: "25px"
+        }
+    };
+    var grillIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/fast-food-15.svg",
+            width: "25px",
+            height: "25px"
+        }
+    };
+    var vegetarianIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/garden-15.svg",
+            width: "25px",
+            height: "25px"
+        }
+    };
+    var iceCreamIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/ice-cream-15.svg",
+            width: "25px",
+            height: "25px"
+        }
+    };
+    var premiumIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/restaurant-15.svg",
+            width: "25px",
+            height: "25px"
+        }
+    };
+    var pizzaIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/restaurant-pizza-15.svg",
+            width: "25px",
+            height: "25px"
+        }
+    };
+    var seafoodIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-symbol",
+            url: "img/restaurant-seafood-15.svg",
+            width: "25px",
+            height: "25px"
+        }
+    };
+    var beerIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: 'img/beer-15.svg',
+            width: "25px",
+            height: "25px"
+        }
+    };
+    var toiletManIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/toilet-man-15.svg",
+            width: "20px",
+            height: "20px"
+        }
+    };
+    var toiletWomanIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/toilet-woman-15.svg",
+            width: "20px",
+            height: "20px"
+        }
+    };
+    var toiletFamilyIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/toilet-family-15.svg",
+            width: "20px",
+            height: "20px"
+        }
+    };
+    var gateIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/roadblock-15.svg",
+            width: "20px",
+            height: "20px"
+        }
+    };
+    var metroIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/rail-15.svg",
+            width: "20px",
+            height: "20px"
+        }
+    };
+    var bikeIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/bicycle-share-15.svg",
+            width: "20px",
+            height: "20px"
+        }
+    };
+    var waterTaxiIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/ferry-15.svg",
+            width: "20px",
+            height: "20px"
+        }
+    };
+    var parkingIcon = {
+        type: "simple",
+        symbol: {
+            type: "picture-marker",
+            url: "img/parking-15.svg",
+            width: "20px",
+            height: "20px"
+        }
+    };
+
+    // Define Fill Symbols
+    var sectionsPoly = {
+        type: "simple",
+        symbol: {
+            type: "simple-fill",
+            color: [255, 0, 0, 0.25],
+            style: "solid",
+            outline: {
+                color: [255, 0, 0, 1],
+                width: 1
+            }
+        }
+    };
+    var parkingPoly = {
+        type: "simple",
+        symbol: {
+            type: "simple-fill",
+            color: [0, 0, 0, 0.25],
+            style: "solid",
+            outline: {
+                color: [0, 0, 0, 1],
+                width: 1
+            }
+        }
+    };
+    var parkBoundaryPoly = {
+        type: "simple",
+        symbol: {
+            type: "simple-fill",
+            color: [255, 0, 0, 0.05],
+            style: "solid",
+            outline: {
+                color: [255, 0, 0, 1],
+                width: .75
+            }
+        }
+    };
+
+    // Feature Layers
+    // Merchandise Feature Layer (points)
+    var merch = new FeatureLayer({
+        url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/2',
+        // minZoom: 15,
+        renderer: merchIcon,
+        outFields: ["name","section"],
+        popupTemplate: {
+            title: "{name}",
+            content: "<p><strong>Near Section:</strong> {section}</p>"
+        }
+    });
+
+    // Food Feature Layer (points)
+    var food = new FeatureLayer({
+        url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/3',
+        // minZoom: 15,
+        // renderer: {
+        //
+        // },
+        outFields: ["name","section"],
+        popupTemplate: {
+            title: "{name}",
+            content: "<p><strong>Near Section:</strong> {section}</p>"
+        }
+
+    });
+
+    // Beer Feature Layer (points)
+    var beer = new FeatureLayer({
+        url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/4',
+        // minZoom: 15,
+        renderer: beerIcon,
+        outFields: ["name","section","brands"],
+        popupTemplate: {
+            title: "{name}",
+            content: "<p><strong>Beer Brands:</strong> {brands}<br><strong>Near Section:</strong> {section}</p>"
+        }
+    });
+
+    // Restrooms Feature Layer (points)
+    var restrooms = new FeatureLayer({
+        url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/5',
+        // minZoom: 15,
+        // renderer: {
+        //
+        // },
+        outFields: ["type", "section"],
+        popupTemplate: {
+            title: "{type}",
+            content: "<p><strong>Near Section:</strong> {section}</p>"
+        }
+    });
+
+    // Sections Feature Layer (polygons)
+    var sections = new FeatureLayer({
+        url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/7',
+        // minZoom: 14,
+        renderer: sectionsPoly,
+        outFields: ["section"],
+        popupTemplate: {
+            title: "Section: {section}"
+        }
+    });
+
+    // Gates Feature Layer (points)
+    var gate = new FeatureLayer({
+        url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/1',
+        // minZoom: 15,
+        renderer: gateIcon,
+        outFields: ["name"],
+        popupTemplate: {
+            title: "{name}"
+        }
+    });
+
+    // Public Transportation Feature Layer (points)
+    var publicTrans = new FeatureLayer({
+        url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/0',
+        // minZoom: 14,
+        // renderer: {
+        //
+        // },
+        outFields: ["name"],
+        popupTemplate: {
+            title: "{name}"
+        }
+    });
+
+    // Parking Lot Feature Layer (polygons)
+    var parkingPoly = new FeatureLayer({
+        url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/6',
+        // minZoom: 14,
+        renderer: parkingPoly,
+        outFields: ["name"],
+        popupTemplate: {
+            title: "{name}"
+        }
+    });
+
+    // Park Boundary Feature Layer (polygons)
+    var parkBoundary = new FeatureLayer({
+        url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/8',
+        renderer: parkBoundaryPoly
+    });
+
+    map.add(parkBoundary);
+    map.add(parkingPoly);
+    map.add(publicTrans);
+    map.add(gate);
+    map.add(sections);
+    map.add(restrooms);
+    map.add(beer);
+    map.add(food);
+    map.add(merch);
+
+    // Feature Filter for Concourse Levels
+    // https://developers.arcgis.com/javascript/latest/api-reference/esri-views-layers-support-FeatureFilter.html
+    // https://developers.arcgis.com/javascript/latest/sample-code/sandbox/index.html?sample=featurefilter-attributes
+
+    // User Feedback/Ratings Widget (Custom Widget???)
+    // https://developers.arcgis.com/javascript/latest/sample-code/widgets-custom-widget/index.html
+    // https://developers.arcgis.com/javascript/latest/sample-code/widgets-editor-basic/index.html
+    // https://developers.arcgis.com/javascript/latest/sample-code/widgets-editor-configurable/index.html
+    // https://developers.arcgis.com/javascript/latest/sample-code/editing-applyedits/index.html
+    // https://developers.arcgis.com/javascript/latest/sample-code/editing-groupedfeatureform/index.html
+    // https://developers.arcgis.com/javascript/latest/sample-code/popup-editaction/index.html
 });
