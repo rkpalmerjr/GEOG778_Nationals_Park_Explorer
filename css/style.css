@@ -12,9 +12,27 @@ body {
     width: 100vw;
 }
 
-#map {
-    height: calc(100vh - 36px);
-    width: calc(100vw - 6px);
+/*#viewDiv {*/
+/*    height: calc(100vh - 36px);*/
+/*    width: calc(100vw - 6px);*/
+/*}*/
+
+#viewDiv {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#menu {
+    width: 150px;
+    padding: 0.8em;
+}
+
+#floorSelector {
+    height: 100px;
+    margin: 1em 0 1em -40px;
+    background: transparent;
 }
 
 .geocoder-control-expanded,
