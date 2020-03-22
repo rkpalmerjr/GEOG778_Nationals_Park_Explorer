@@ -4,12 +4,12 @@
 require([
     "esri/Map",
     "esri/views/MapView",
+    "esri/views/layers/support/FeatureFilter",
     "esri/Basemap",
     "esri/layers/VectorTileLayer",
     "esri/layers/FeatureLayer",
     "esri/layers/GroupLayer",
     "esri/layers/support/LabelClass",
-    "esri/layers/support/BuildingFilter",
     "esri/widgets/Home",
     "esri/widgets/Locate",
     "esri/widgets/Expand",
@@ -19,11 +19,11 @@ require([
     "esri/widgets/Search",
     "esri/widgets/ScaleBar",
     "esri/widgets/Slider",
-    "esri/core/Collection",
 ],
 // Main Function
-function(Map, MapView, Basemap, VectorTileLayer, FeatureLayer, GroupLayer, LabelClass, BuildingFilter, Home, Locate, Expand, BasemapToggle, BasemapGallery, LayerList, Search, ScaleBar, Slider, Collection) {
-    // Colored Pencils Basemap (Vector Tiles)
+function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, GroupLayer, LabelClass, Home, Locate,
+         Expand, BasemapToggle, BasemapGallery, LayerList, Search, ScaleBar, Slider) {
+    // Colored Pencils Basemap (Vector Tiles) <-- Potential default basemap
     // var basemap = new Basemap({
     //     baseLayers: [
     //         new VectorTileLayer({
@@ -50,7 +50,8 @@ function(Map, MapView, Basemap, VectorTileLayer, FeatureLayer, GroupLayer, Label
         center: [-77.0075, 38.872778], // latitude, longitude
         zoom: 13,
         minZoom: 12,
-        maxZoom: 19
+        maxZoom: 19,
+        minScale: 144447.638572
     });
 
     // Home Widget
@@ -114,7 +115,7 @@ function(Map, MapView, Basemap, VectorTileLayer, FeatureLayer, GroupLayer, Label
     var scaleBar = new ScaleBar({
         view: view
     });
-    view.ui.add(scaleBar, "bottom-right");
+    view.ui.add(scaleBar, "bottom-left");
 
     //------------------------------------------------------------------------------------------------------------------
     // Define Overlay Layers
@@ -339,7 +340,7 @@ function(Map, MapView, Basemap, VectorTileLayer, FeatureLayer, GroupLayer, Label
         labelExpressionInfo: {
             expression: "$feature.section"
         },
-        labelPlacement: "center-center",
+        labelPlacement: "always-horizontal",
         minScale: 2256
     };
 
@@ -510,12 +511,6 @@ function(Map, MapView, Basemap, VectorTileLayer, FeatureLayer, GroupLayer, Label
         layers: [parkBoundaryPoint, parkBoundaryPoly]
     });
 
-    // // All Layers
-    // var allLayers = new GroupLayer({
-    //     title: "All Layers",
-    //     layers: [atParkLayers, toParkLayers, parkLayers]
-    // });
-
     // Add Feature Layers to Map
     map.add(toParkLayers);
     map.add(atParkLayers);
@@ -638,41 +633,26 @@ function(Map, MapView, Basemap, VectorTileLayer, FeatureLayer, GroupLayer, Label
         expandTooltip: "Search here for things (merchandise, food, beer, restrooms, etc.)",
         content: search
     });
-    view.ui.add(searchExpand, "top-left");
+    view.ui.add(searchExpand, "top-right");
 
     // Slider Widget
     // https://developers.arcgis.com/javascript/latest/sample-code/sandbox/index.html?sample=building-scene-layer-filter
     // https://developers.arcgis.com/javascript/latest/sample-code/sandbox/index.html?sample=featurefilter-attributes
     var levelLayerView = null;
-    console.log("TEST");
 
+    // Set the initial level filter to level 1
+    filterLayers = [merch, food, beer, restrooms, sections];
+    filterLayers.forEach(function(layer){
+        view.whenLayerView(layer).then(function(layerView) {
+            levelLayerView = layerView;
+            levelLayerView.filter = {
+                where: "level = 1"
+            };
+        }).catch(console.error);
+    });
 
-    // NEED TO UPDATE THIS TO SET THE INITIAL VIEW TO JUST LEVEL 1
-    // view
-    //     .when(function() {
-    //         // Get the BuildingSceneLayer from the webscene
-    //         map.allLayers.forEach(function(layer) {
-    //             // console.log(layer.title);
-    //             if (layer.title === "Seating Sections") {
-    //                 console.log(layer.title);
-    //                 buildingLayer = layer;
-    //             }
-    //         });
-    //
-    //         // Define a floor filter
-    //         const buildingFilter = {
-    //             where: "Level = 1"
-    //         };
-    //         // Set the filter in the filters array on the layer
-    //         buildingLayer.filter = [buildingFilter];
-    //         // Specify which filter is the one that should be applied
-    //         buildingLayer.activeFilterID = buildingFilter.id;
-    //     })
-    //     .catch(console.error);
-
-    // Constructing the floor slider widget <-- THIS PART IS GOOD
+    // Constructing the floor slider widget
     const floorSlider = new Slider({
-        // label: "Level Slider",
         container: "floorSelector",
         min: 1,
         max: 4,
@@ -689,40 +669,41 @@ function(Map, MapView, Basemap, VectorTileLayer, FeatureLayer, GroupLayer, Label
         values: [1]
     });
 
-    // NEED TO UPDATE THIS LOOKING AT THE LAYER FILTER EXAMPLE
-    // When the user changes the value, the filter is cloned and a new expression is set
-    // floorSlider.watch("values", function(values) {
-    //     const filter = buildingLayer.filters.getItemAt(0).clone();
-    //     filter.filterBlocks.getItemAt(0).filterExpression = "BldgLevel = " + values[0].toString();
-    //     buildingLayer.filters = [filter];
-    //     // When cloning the filter keeps the id, but this is set in case the filter was reset
-    //     buildingLayer.activeFilterID = filter.id;
-    // });
+    // Update the level filter based on level selected
+    floorSlider.watch("values", function(values) {
+        console.log("Level " + values + " selected.  Displaying features on level " + values + " only.");
+        filterLayers.forEach(function(layer){
+            view.whenLayerView(layer).then(function(layerView) {
+                levelLayerView = layerView;
+                levelLayerView.filter = {
+                    where: "level = " + values
+                };
+            });
+        });
+    });
 
-
-
-    // Reset the filter by setting the activeFilterID to null
+    // Reset the level filter to all levels by setting the level filter to null
     document
         .getElementById("filterReset")
         .addEventListener("click", function() {
-            levelLayerView.filter = null;
+            filterLayers.forEach(function(layer){
+                view.whenLayerView(layer).then(function(layerView) {
+                    levelLayerView = layerView;
+                    levelLayerView.filter = null;
+                });
+            });
+            console.log("Level filters cleared.")
         });
 
-    // var sliderExpand = new Expand({
-    //     view: view,
-    //     expandTooltip: "Filter by Level",
-    //     content: floorSlider
-    // });
-    // view.ui.add(sliderExpand, "bottom-left");
-    view.ui.add("menu", "bottom-left");
-
-    // Legend Widget???
-    // https://developers.arcgis.com/javascript/latest/sample-code/widgets-legend/index.html
-    // https://developers.arcgis.com/javascript/latest/sample-code/widgets-legend-card/index.html
-
-    // Feature Filter for Concourse Levels
-    // https://developers.arcgis.com/javascript/latest/api-reference/esri-views-layers-support-FeatureFilter.html
-    // https://developers.arcgis.com/javascript/latest/sample-code/sandbox/index.html?sample=featurefilter-attributes
+    var sliderExpand = new Expand({
+        view: view,
+        expandTooltip: "Filter by Level",
+        expandIconClass: "esri-icon-filter"
+        // expanded: true,
+        // content:
+    });
+    view.ui.add(sliderExpand, "top-right");
+    view.ui.add("menu", "bottom-right");
 
     // User Feedback/Ratings Widget (Custom Widget???)
     // https://developers.arcgis.com/javascript/latest/sample-code/widgets-custom-widget/index.html
@@ -732,6 +713,10 @@ function(Map, MapView, Basemap, VectorTileLayer, FeatureLayer, GroupLayer, Label
     // https://developers.arcgis.com/javascript/latest/sample-code/editing-groupedfeatureform/index.html
     // https://developers.arcgis.com/javascript/latest/sample-code/popup-editaction/index.html
 
+    // Legend Widget???
+    // https://developers.arcgis.com/javascript/latest/sample-code/widgets-legend/index.html
+    // https://developers.arcgis.com/javascript/latest/sample-code/widgets-legend-card/index.html
+
     //------------------------------------------------------------------------------------------------------------------
     // Define Functions
     //------------------------------------------------------------------------------------------------------------------
@@ -739,6 +724,5 @@ function(Map, MapView, Basemap, VectorTileLayer, FeatureLayer, GroupLayer, Label
     function defineActionsLayerList(event) {
 
     };
-
 
 });
