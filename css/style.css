@@ -1,27 +1,42 @@
 /* Kevin Palmer, UW-Madison, GEOG777, Fall 2019, Project 2 */
 
 
-body {
+html, body, #viewDiv {
     padding: 0;
     margin: 0;
+    height: calc(100vh - 34px);
+    width: calc(100vw - 6px);
 }
 
-html,
-body {
-    height: 100vh;
-    width: 100vw;
+.esri-widget {
+    color: navy;
 }
 
-/*#viewDiv {*/
-/*    height: calc(100vh - 36px);*/
-/*    width: calc(100vw - 6px);*/
-/*}*/
+.esri-widget--button {
+    background-color: red;
+    color: white;
+    border: 1px solid navy;
+}
 
-#viewDiv {
-    padding: 0;
-    margin: 0;
-    height: 100%;
-    width: 100%;
+.esri-basemap-gallery__item-title, .esri-layer-list__item-title {
+    color: navy;
+    font-weight: bold;
+}
+
+.esri-slider__track, .esri-icon-visible:before {
+    color: navy;
+}
+
+.esri-view-height-small .esri-ui-corner .esri-component .esri-expand__content {
+    max-height: calc(100vh - 34px);
+}
+
+.esri-expand__container {
+    height: 32px;
+}
+
+.esri-ui-corner .esri-component {
+    box-shadow: 0 1px 4px 4px rgba(0,0,128,0.3);
 }
 
 #menu {
@@ -35,42 +50,56 @@ body {
     background: transparent;
 }
 
-.geocoder-control-expanded,
-.leaflet-touch .geocoder-control-expanded,
-.geocoder-control-suggestions,
-.leaflet-touch .geocoder-control-suggestions {
-    width: calc(100vw - 19px);
+#filterReset {
+    background-color: red;
+    border: 2px solid navy;
 }
 
-.leaflet-touch .geocoder-control.geocoder-control-expanded {
-    width: calc(100vw - 19px);
+.esri-expand__content {
+    border: 2px solid navy;
 }
 
-.label {
-    font-weight: 700;
-    text-transform: uppercase;
-    text-align: center;
+.esri-slider__thumb {
+    background-color: red;
+    border: 2px solid navy;
 }
 
-.label div {
-    position: relative;
-    left: -50%;
-    bottom: 50%;
-}
+/*.geocoder-control-expanded,*/
+/*.leaflet-touch .geocoder-control-expanded,*/
+/*.geocoder-control-suggestions,*/
+/*.leaflet-touch .geocoder-control-suggestions {*/
+/*    width: calc(100vw - 19px);*/
+/*}*/
 
-.leaflet-tooltip-pane .sectionText {
-    color: red;
-    font-weight: bold;
-    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;;
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-}
+/*.leaflet-touch .geocoder-control.geocoder-control-expanded {*/
+/*    width: calc(100vw - 19px);*/
+/*}*/
 
-.leaflet-container .sectionText {
-    font-size: 14px
-}
+/*.label {*/
+/*    font-weight: 700;*/
+/*    text-transform: uppercase;*/
+/*    text-align: center;*/
+/*}*/
 
-.leaflet-retina .leaflet-control-layers-toggle {
-    background-image: url("../img/layer-group.svg")
-}
+/*.label div {*/
+/*    position: relative;*/
+/*    left: -50%;*/
+/*    bottom: 50%;*/
+/*}*/
+
+/*.leaflet-tooltip-pane .sectionText {*/
+/*    color: red;*/
+/*    font-weight: bold;*/
+/*    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;;*/
+/*    background: transparent;*/
+/*    border: 0;*/
+/*    box-shadow: none;*/
+/*}*/
+
+/*.leaflet-container .sectionText {*/
+/*    font-size: 14px*/
+/*}*/
+
+/*.leaflet-retina .leaflet-control-layers-toggle {*/
+/*    background-image: url("../img/layer-group.svg")*/
+/*}*/

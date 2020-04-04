@@ -47,7 +47,7 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     var view = new MapView({
         container: "viewDiv",
         map: map,
-        center: [-77.0075, 38.872778], // latitude, longitude
+        center: [-77.0075, 38.872778], // longitude, latitude
         zoom: 13,
         minZoom: 12,
         maxZoom: 19,
@@ -64,7 +64,6 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     // Locate Widget
     var locateWidget = new Locate({
         view: view,
-        // label: "Zoom to Location",
     });
     view.ui.add(locateWidget, "top-left");
 
@@ -74,28 +73,34 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
         nextBasemap: "satellite"
     });
     var basemapToggleExpand = new Expand({
+        id: "basemapToggleExpand",
         view: view,
         expandTooltip: "Basemap Toggle",
-        content: basemapToggle
+        content: basemapToggle,
+        autoCollapse: true,
+        mode: "floating"
     });
-    view.ui.add(basemapToggleExpand, "top-right");
+    view.ui.add(basemapToggleExpand, "top-left");
 
-    // Basemap Gallery Widget
-    var basemapGallery = new BasemapGallery({
-        view: view,
-        source: {
-            portal: {
-                url: "https://www.arcgis.com",
-                useVectorBasemaps: true //Load vector tile basemaps
-            }
-        }
-    });
-    var basemapGalleryExpand = new Expand({
-        view: view,
-        expandTooltip: "Basemap Gallery",
-        content: basemapGallery
-    });
-    view.ui.add(basemapGalleryExpand, "top-right");
+    // // Basemap Gallery Widget
+    // var basemapGallery = new BasemapGallery({
+    //     view: view,
+    //     source: {
+    //         portal: {
+    //             url: "https://www.arcgis.com",
+    //             useVectorBasemaps: true //Load vector tile basemaps
+    //         }
+    //     }
+    // });
+    // var basemapGalleryExpand = new Expand({
+    //     id: "basemapGalleryExpand",
+    //     view: view,
+    //     expandTooltip: "Basemap Gallery",
+    //     content: basemapGallery,
+    //     autoCollapse: true,
+    //     mode: "floating"
+    // });
+    // view.ui.add(basemapGalleryExpand, "top-left");
 
     // LayerList Widget
     var layerList = new LayerList({
@@ -103,9 +108,12 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
         // listItemCreatedFunction: defineActionsLayerList
     });
     var layerListExpand = new Expand({
+        id: "layerListExpand",
         view: view,
         expandTooltip: "Layer List",
-        content: layerList
+        content: layerList,
+        autoCollapse: true,
+        mode: "floating"
     });
     view.ui.add(layerListExpand, {
         position: "top-right"
@@ -115,7 +123,7 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     var scaleBar = new ScaleBar({
         view: view
     });
-    view.ui.add(scaleBar, "bottom-left");
+    view.ui.add(scaleBar, "bottom-right");
 
     //------------------------------------------------------------------------------------------------------------------
     // Define Overlay Layers
@@ -397,7 +405,7 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
         visible: false,
         outFields: ["*"],
         popupTemplate: {
-            title: "{type}",
+            title: "{type} Restroom",
             content: "<p><strong>Near Section:</strong> {section}</p>"
         }
     });
@@ -629,9 +637,12 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
         allPlaceholder: "Search here for things..."
     });
     var searchExpand = new Expand({
+        id: "searchExpand",
         view: view,
         expandTooltip: "Search here for things (merchandise, food, beer, restrooms, etc.)",
-        content: search
+        content: search,
+        autoCollapse: true,
+        mode: "floating"
     });
     view.ui.add(searchExpand, "top-right");
 
@@ -696,14 +707,16 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
         });
 
     var sliderExpand = new Expand({
+        id: "sliderExpand",
         view: view,
         expandTooltip: "Filter by Level",
-        expandIconClass: "esri-icon-filter"
+        expandIconClass: "esri-icon-filter",
+        content: menu,
+        autoCollapse: true,
+        mode: "floating"
         // expanded: true,
-        // content:
     });
     view.ui.add(sliderExpand, "top-right");
-    view.ui.add("menu", "bottom-right");
 
     // User Feedback/Ratings Widget (Custom Widget???)
     // https://developers.arcgis.com/javascript/latest/sample-code/widgets-custom-widget/index.html
