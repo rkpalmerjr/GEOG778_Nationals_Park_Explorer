@@ -23,36 +23,37 @@ require([
 // Main Function
 function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, GroupLayer, LabelClass, Home, Locate,
          Expand, BasemapToggle, BasemapGallery, LayerList, Search, ScaleBar, Slider) {
-    // Colored Pencils Basemap (Vector Tiles) <-- Potential default basemap
-    // var basemap = new Basemap({
-    //     baseLayers: [
-    //         new VectorTileLayer({
-    //             portalItem: {
-    //                 id: "4cf7e1fb9f254dcda9c8fbadb15cf0f8" // Colored Pencil Basemap
-    //             }
-    //         })
-    //     ]
-    // });
-    //
-    // var map = new Map({
-    //     basemap: basemap
-    // });
-
-    // Basemap
-    var map = new Map({
-        basemap: "streets"
+    // Newspaper Basemap (Vector Tiles)
+    var basemap = new Basemap({
+        baseLayers: [
+            new VectorTileLayer({
+                portalItem: {
+                    id: "dfb04de5f3144a80bc3f9f336228d24a" // Newspaper Basemap
+                }
+            })
+        ]
     });
+
+    var map = new Map({
+        basemap: basemap
+    });
+
+    // // Basemap
+    // var map = new Map({
+    //     basemap: "streets"
+    // });
 
     // View
     var view = new MapView({
         container: "viewDiv",
         map: map,
         center: [-77.0075, 38.872778], // longitude, latitude
-        zoom: 13,
-        minZoom: 12,
-        maxZoom: 19,
-        minScale: 144447.638572
+        zoom: 12,
     });
+    view.constraints = {
+        minZoom: 8,
+        maxZoom: 19
+    };
 
     // Home Widget
     var homeWidget = new Home({
@@ -72,15 +73,16 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
         view: view,
         nextBasemap: "satellite"
     });
-    var basemapToggleExpand = new Expand({
-        id: "basemapToggleExpand",
-        view: view,
-        expandTooltip: "Basemap Toggle",
-        content: basemapToggle,
-        autoCollapse: true,
-        mode: "floating"
-    });
-    view.ui.add(basemapToggleExpand, "top-left");
+    view.ui.add(basemapToggle, "bottom-left");
+    // var basemapToggleExpand = new Expand({
+    //     id: "basemapToggleExpand",
+    //     view: view,
+    //     expandTooltip: "Basemap Toggle",
+    //     content: basemapToggle,
+    //     autoCollapse: true,
+    //     mode: "floating"
+    // });
+    // view.ui.add(basemapToggleExpand, "top-left");
 
     // // Basemap Gallery Widget
     // var basemapGallery = new BasemapGallery({
@@ -340,16 +342,14 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
             haloColor: "white",
             haloSize: 2,
             font: {
-                // family: "Arial",
-                size: 10,
-                // weight: "bold"
+                size: 10
             },
         },
         labelExpressionInfo: {
             expression: "$feature.section"
         },
         labelPlacement: "always-horizontal",
-        minScale: 2256
+        minScale: 1129
     };
 
     // Define Feature Layers
@@ -357,13 +357,16 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     var merch = new FeatureLayer({
         url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/2',
         title: "Merchandise",
-        minScale: 4513.988705,
+        minScale: 2257,
         renderer: merchIcon,
-        visible: false,
+        visible: true,
         outFields: ["*"],
         popupTemplate: {
             title: "{name}",
-            content: "<p><strong>Near Section:</strong> {section}</p>"
+            collapseEnabled: false,
+            content: "<p>Concourse:  <strong>{concourse}</strong><br>" +
+                "Location:  <strong>{location}</strong><br>" +
+                "Section:  <strong>{section}</strong></p>"
         }
     });
 
@@ -371,28 +374,35 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     var food = new FeatureLayer({
         url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/3',
         title: "Food",
-        minScale: 4513.988705,
+        minScale: 2257,
         renderer: foodIcons,
-        visible: false,
+        visible: true,
         outFields: ["*"],
         popupTemplate: {
             title: "{name}",
-            content: "<p><strong>Near Section:</strong> {section}</p>"
+            collapseEnabled: false,
+            content: "<p>Food Type:  <strong>{type}</strong><br>" +
+                "Concourse:  <strong>{concourse}</strong><br>" +
+                "Location:  <strong>{location}</strong><br>" +
+                "Section:  <strong>{section}</strong></p>"
         }
-
     });
 
     // Beer Feature Layer (points)
     var beer = new FeatureLayer({
         url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/4',
-        title: "Beer",
-        minScale: 4513.988705,
+        title: "Beer and Alcohol",
+        minScale: 2257,
         renderer: beerIcon,
-        visible: false,
+        visible: true,
         outFields: ["*"],
         popupTemplate: {
             title: "{name}",
-            content: "<p><strong>Beer Brands:</strong> {brands}<br><strong>Near Section:</strong> {section}</p>"
+            collapseEnabled: false,
+            content: "<p>Beer Brands:  <strong>{brands}</strong><br>" +
+                "Concourse:  <strong>{concourse}</strong><br>" +
+                "Location:  <strong>{location}</strong><br>" +
+                "Section:  <strong>{section}</strong></p>"
         }
     });
 
@@ -400,42 +410,49 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     var restrooms = new FeatureLayer({
         url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/5',
         title: "Restrooms",
-        minScale: 4513.988705,
+        minScale: 2257,
         renderer: restroomIcons,
-        visible: false,
+        visible: true,
         outFields: ["*"],
         popupTemplate: {
             title: "{type} Restroom",
-            content: "<p><strong>Near Section:</strong> {section}</p>"
+            collapseEnabled: false,
+            content: "<p>Concourse:  <strong>{concourse}</strong><br>" +
+                "Location:  <strong>{location}</strong><br>" +
+                "Section:  <strong>{section}</strong></p>"
         }
     });
 
     // Sections Feature Layer (polygons)
     var sections = new FeatureLayer({
         url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/7',
-        title: "Seating Sections",
-        minScale: 9027.977411,
+        title: "Sections",
+        minScale: 9028,
         renderer: sectionsPoly,
         visible: true,
         labelingInfo: [labelClass],
         labelsVisible: true,
         outFields: ["*"],
         popupTemplate: {
-            title: "Section: {section}",
-            content: "<p><strong>Concourse Level:</strong> {level}</p>"
+            title: "Section {section}",
+            collapseEnabled: false,
+            content: "<p>Concourse:  <strong>{concourse}</strong><br>" +
+                "Location:  <strong>{location}</strong></p>"
         }
     });
 
     // Gates Feature Layer (points)
     var gates = new FeatureLayer({
         url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/1',
-        title: "Entrance Gates",
-        minScale: 9027.977411,
+        title: "Gates",
+        minScale: 9028,
         renderer: gateIcon,
         visible: true,
         outFields: ["*"],
         popupTemplate: {
-            title: "{name}"
+            title: "{name}",
+            collapseEnabled: false,
+            content: "<p>Concourse:  <strong>{concourse}</strong></p>"
         }
     });
 
@@ -443,12 +460,14 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     var publicTrans = new FeatureLayer({
         url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/0',
         title: "Pubic Transportation",
-        minScale: 18055.954822,
+        minScale: 18056,
         renderer: publicTransIcons,
         visible: true,
         outFields: ["*"],
         popupTemplate: {
-            title: "{name}"
+            title: "{name}",
+            collapseEnabled: false,
+            content: "<p><strong>{type}</strong></p>"
         }
     });
 
@@ -456,12 +475,13 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     var parkingPoly = new FeatureLayer({
         url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/6',
         title: "Parking Lot or Garage Boundaries",
-        minScale: 18055.954822,
+        minScale: 18056,
         renderer: parkingPolyRenderer,
         visible: true,
         outFields: ["*"],
         popupTemplate: {
-            title: "{name}"
+            title: "{name}",
+            collapseEnabled: false
         }
     });
 
@@ -469,12 +489,13 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     var parkingPoint = new FeatureLayer({
         url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/6',
         title: "Parking Lot or Garage Icons",
-        minScale: 36111.909643,
+        minScale: 36112,
         renderer: parkingIcon,
         visible: true,
         outFields: ["*"],
         popupTemplate: {
-            title: "{name}"
+            title: "{name}",
+            collapseEnabled: false
         }
     });
 
@@ -482,7 +503,7 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     var parkBoundaryPoly = new FeatureLayer({
         url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/8',
         title: "Nationals Park Boundary",
-        minScale: 36111.909643,
+        minScale: 36112,
         renderer: parkBoundaryPolyRenderer,
         // listMode: "hide"
     });
@@ -491,38 +512,38 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     var parkBoundaryPoint = new FeatureLayer({
         url: 'http://rkpalmerjr.com/arcgis/rest/services/GEOG778/NatsPark/MapServer/8',
         title: "Nationals Park Icon",
-        maxScale: 72223.819286,
+        maxScale: 36111,
         renderer: natsIcon,
-        // listMode: "hide"
+        listMode: "hide"
     });
 
     // Group Layers
     var atParkLayers = new GroupLayer({
-        title: "Concessions and Restrooms",
+        title: "Nationals Park",
         // visible: false,
         // visibilityMode: "exclusive",
-        layers: [restrooms, beer, food, merch]
+        layers: [parkBoundaryPoint, parkBoundaryPoly, gates, sections, restrooms, beer, food, merch]
     });
 
     var toParkLayers = new GroupLayer({
-        title: "Seats, Gates, and Transportation",
+        title: "Transportation",
         visible: true,
         // visibilityMode: "exclusive",
-        layers: [parkingPoly, parkingPoint, publicTrans, gates, sections]
+        layers: [parkingPoly, parkingPoint, publicTrans]
     });
 
-    var parkLayers = new GroupLayer({
-        title: "Nationals Park Boundary and Icon",
-        visible: true,
-        // visibilityMode: "exclusive",
-        // listMode: "hide-children",
-        layers: [parkBoundaryPoint, parkBoundaryPoly]
-    });
+    // var parkLayers = new GroupLayer({
+    //     title: "Nationals Park Boundary",
+    //     visible: true,
+    //     // visibilityMode: "exclusive",
+    //     // listMode: "hide-children",
+    //     layers: [parkBoundaryPoint, parkBoundaryPoly]
+    // });
 
     // Add Feature Layers to Map
+    // map.add(parkLayers);
     map.add(toParkLayers);
     map.add(atParkLayers);
-    map.add(parkLayers);
 
     //------------------------------------------------------------------------------------------------------------------
     //
@@ -537,10 +558,12 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
             placeholder: "example: hat",
             searchFields: ["tags", "name"],
             displayField: "name",
-            suggestionTemplate: "{name}, Section: {section}",
+            suggestionTemplate: "<strong>{name}</strong> - {concourse} concourse, {location}, Section {section}",
             exactMatch: false,
             outFields: ["*"],
-            suggestionsEnabled: true
+            suggestionsEnabled: true,
+            maxResults: 100,
+            maxSuggestions: 100
         },
         // Food
         {
@@ -549,10 +572,12 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
             placeholder: "example: hot dog",
             searchFields: ["tags", "name", "type"],
             displayField: "name",
-            suggestionTemplate: "{name}, Section: {section}",
+            suggestionTemplate: "<strong>{name}</strong> - {concourse} concourse, {location}, Section {section}",
             exactMatch: false,
             outFields: ["*"],
             suggestionsEnabled: true,
+            maxResults: 100,
+            maxSuggestions: 100,
             // resultSymbol:
         },
         // Beer
@@ -562,10 +587,12 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
             placeholder: "example: Budweiser",
             searchFields: ["tags", "name", "brands"],
             displayField: "name",
-            suggestionTemplate: "{name}, Section: {section}",
+            suggestionTemplate: "<strong>{name}</strong> - {concourse} concourse, {location}, Section {section}",
             exactMatch: false,
             outFields: ["*"],
-            suggestionsEnabled: true
+            suggestionsEnabled: true,
+            maxResults: 100,
+            maxSuggestions: 100
         },
         // Restrooms
         {
@@ -574,10 +601,12 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
             placeholder: "example: mens",
             searchFields: ["tags", "type"],
             displayField: "type",
-            suggestionTemplate: "{type}, Section: {section}",
+            suggestionTemplate: "<strong>{type} Restroom</strong> - {concourse} concourse, {location}, Section {section}",
             exactMatch: false,
             outFields: ["*"],
-            suggestionsEnabled: true
+            suggestionsEnabled: true,
+            maxResults: 100,
+            maxSuggestions: 100
         },
         // Sections
         {
@@ -586,10 +615,12 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
             placeholder: "example: 130",
             searchFields: ["tags", "section", "location"],
             displayField: "section",
-            suggestionTemplate: "Section: {section}",
+            suggestionTemplate: "<strong>Section {section}</strong> - {concourse} concourse, {location}, Section {section}",
             exactMatch: false,
             outFields: ["*"],
-            suggestionsEnabled: true
+            suggestionsEnabled: true,
+            maxResults: 100,
+            maxSuggestions: 100
         },
         // Gates
         {
@@ -598,10 +629,12 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
             placeholder: "example: gate",
             searchFields: ["tags", "name"],
             displayField: "name",
-            suggestionTemplate: "{name}, Section: {section}",
+            suggestionTemplate: "<strong>{name}</strong> - {concourse} concourse",
             exactMatch: false,
             outFields: ["*"],
-            suggestionsEnabled: true
+            suggestionsEnabled: true,
+            maxResults: 100,
+            maxSuggestions: 100
         },
         // Public Transportation
         {
@@ -610,10 +643,12 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
             placeholder: "example: metro",
             searchFields: ["tags", "name", "type"],
             displayField: "name",
-            suggestionTemplate: "{name}, Type: {type}",
+            suggestionTemplate: "<strong>{name}</strong> - Type:  {type}",
             exactMatch: false,
             outFields: ["*"],
-            suggestionsEnabled: true
+            suggestionsEnabled: true,
+            maxResults: 100,
+            maxSuggestions: 100
         },
         // Parking
         {
@@ -622,10 +657,12 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
             placeholder: "example: parking",
             searchFields: ["tags", "name"],
             displayField: "name",
-            suggestionTemplate: "{name}, Type: {type}",
+            suggestionTemplate: "<strong>{name}</strong> - Type:  {type}",
             exactMatch: false,
             outFields: ["*"],
-            suggestionsEnabled: true
+            suggestionsEnabled: true,
+            maxResults: 100,
+            maxSuggestions: 100
         }
     ];
 
@@ -634,7 +671,8 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
         locationEnabled: false,
         sources: searchSources,
         includeDefaultSources: false,
-        allPlaceholder: "Search here for things..."
+        allPlaceholder: "Search here for things (merchandise, food, beer, restrooms, etc.)"
+        // resultGraphic:
     });
     var searchExpand = new Expand({
         id: "searchExpand",
@@ -646,13 +684,18 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     });
     view.ui.add(searchExpand, "top-right");
 
+    // Display the selected result from the search <-- NEED TO FIGURE THIS OUT
+    search.on("select-result", function(event){
+        console.log("The selected search result: ", event);
+    });
+
     // Slider Widget
     // https://developers.arcgis.com/javascript/latest/sample-code/sandbox/index.html?sample=building-scene-layer-filter
     // https://developers.arcgis.com/javascript/latest/sample-code/sandbox/index.html?sample=featurefilter-attributes
     var levelLayerView = null;
 
     // Set the initial level filter to level 1
-    filterLayers = [merch, food, beer, restrooms, sections];
+    filterLayers = [merch, food, beer, restrooms, sections, gates];
     filterLayers.forEach(function(layer){
         view.whenLayerView(layer).then(function(layerView) {
             levelLayerView = layerView;
@@ -719,6 +762,9 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     view.ui.add(sliderExpand, "top-right");
 
     // User Feedback/Ratings Widget (Custom Widget???)
+
+    // https://developers.arcgis.com/javascript/latest/sample-code/popup-actions/index.html
+
     // https://developers.arcgis.com/javascript/latest/sample-code/widgets-custom-widget/index.html
     // https://developers.arcgis.com/javascript/latest/sample-code/widgets-editor-basic/index.html
     // https://developers.arcgis.com/javascript/latest/sample-code/widgets-editor-configurable/index.html
@@ -726,16 +772,12 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     // https://developers.arcgis.com/javascript/latest/sample-code/editing-groupedfeatureform/index.html
     // https://developers.arcgis.com/javascript/latest/sample-code/popup-editaction/index.html
 
-    // Legend Widget???
-    // https://developers.arcgis.com/javascript/latest/sample-code/widgets-legend/index.html
-    // https://developers.arcgis.com/javascript/latest/sample-code/widgets-legend-card/index.html
-
     //------------------------------------------------------------------------------------------------------------------
     // Define Functions
     //------------------------------------------------------------------------------------------------------------------
 
-    function defineActionsLayerList(event) {
-
-    };
+    // function defineActionsLayerList(event) {
+    //
+    // };
 
 });

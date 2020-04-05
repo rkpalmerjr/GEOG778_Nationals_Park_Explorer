@@ -8,6 +8,8 @@ html, body, #viewDiv {
     width: calc(100vw - 6px);
 }
 
+/*Classes*/
+
 .esri-widget {
     color: navy;
 }
@@ -18,31 +20,78 @@ html, body, #viewDiv {
     border: 1px solid navy;
 }
 
-.esri-basemap-gallery__item-title, .esri-layer-list__item-title {
+.esri-widget--button:hover {
     color: navy;
-    font-weight: bold;
 }
 
-.esri-slider__track, .esri-icon-visible:before {
-    color: navy;
+/*.esri-basemap-gallery__item-title, .esri-layer-list__item-title {*/
+/*    color: navy;*/
+/*    font-weight: bold;*/
+/*}*/
+
+.esri-expand__container {
+    height: 32px;
+}
+
+.esri-expand__content, .esri-expand__content--expanded, .esri-search--sources .esri-search__sources-menu, .esri-view-width-xlarge .esri-popup__main-container {
+    border: 2px solid navy;
 }
 
 .esri-view-height-small .esri-ui-corner .esri-component .esri-expand__content {
     max-height: calc(100vh - 34px);
 }
 
-.esri-expand__container {
-    height: 32px;
+.esri-view-height-medium .esri-ui-corner .esri-component .esri-expand__content {
+    max-height: calc(100vh - 34px);
 }
 
-.esri-ui-corner .esri-component {
+.esri-layer-list__item-title, .esri-menu__list-item, .esri-slider--vertical .esri-slider__tick-label {
+    font-weight: bold;
+}
+
+.esri-search {
+    width: calc(100vw - 130px);
+}
+
+.esri-slider__thumb {
+    background-color: red;
+    border: 2px solid navy;
+}
+
+.esri-popup__main-container, {
+    border: 1px solid navy;
+}
+
+.esri-popup__header-title {
+    font-size: 18px;
+}
+
+.esri-basemap-toggle__image {
+    border: 1px solid navy;
+}
+
+.esri-ui-corner .esri-component, .esri-basemap-toggle__image--secondary {
     box-shadow: 0 1px 4px 4px rgba(0,0,128,0.3);
+}
+
+.esri-scale-bar__label-container--line {
+    z-index: auto;
+}
+
+.esri-scale-bar__label {
+    color: black;
+}
+
+.esri-slider__track, .esri-icon-visible:before {
+    color: navy;
 }
 
 #menu {
     width: 150px;
     padding: 0.8em;
 }
+
+/*IDs*/
 
 #floorSelector {
     height: 100px;
@@ -54,52 +103,3 @@ html, body, #viewDiv {
     background-color: red;
     border: 2px solid navy;
 }
-
-.esri-expand__content {
-    border: 2px solid navy;
-}
-
-.esri-slider__thumb {
-    background-color: red;
-    border: 2px solid navy;
-}
-
-/*.geocoder-control-expanded,*/
-/*.leaflet-touch .geocoder-control-expanded,*/
-/*.geocoder-control-suggestions,*/
-/*.leaflet-touch .geocoder-control-suggestions {*/
-/*    width: calc(100vw - 19px);*/
-/*}*/
-
-/*.leaflet-touch .geocoder-control.geocoder-control-expanded {*/
-/*    width: calc(100vw - 19px);*/
-/*}*/
-
-/*.label {*/
-/*    font-weight: 700;*/
-/*    text-transform: uppercase;*/
-/*    text-align: center;*/
-/*}*/
-
-/*.label div {*/
-/*    position: relative;*/
-/*    left: -50%;*/
-/*    bottom: 50%;*/
-/*}*/
-
-/*.leaflet-tooltip-pane .sectionText {*/
-/*    color: red;*/
-/*    font-weight: bold;*/
-/*    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;;*/
-/*    background: transparent;*/
-/*    border: 0;*/
-/*    box-shadow: none;*/
-/*}*/
-
-/*.leaflet-container .sectionText {*/
-/*    font-size: 14px*/
-/*}*/
-
-/*.leaflet-retina .leaflet-control-layers-toggle {*/
-/*    background-image: url("../img/layer-group.svg")*/
-/*}*/
