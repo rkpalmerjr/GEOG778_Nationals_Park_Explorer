@@ -4,7 +4,8 @@
 html, body, #viewDiv {
     padding: 0;
     margin: 0;
-    height: calc(100vh - 34px);
+    /*height: calc(100vh - 34px);*/
+    height: calc(calc(var(--vh, 1vh) * 100) - 34px);
     width: calc(100vw - 6px);
 }
 
@@ -33,7 +34,11 @@ html, body, #viewDiv {
     height: 32px;
 }
 
-.esri-expand__content, .esri-expand__content--expanded, .esri-search--sources .esri-search__sources-menu, .esri-view-width-xlarge .esri-popup__main-container {
+.esri-expand__content,
+.esri-expand__content--expanded,
+.esri-search--sources .esri-search__sources-menu,
+.esri-view-width-xlarge .esri-popup__main-container,
+.esri-view-width-xsmall .esri-popup--is-docked-bottom-center .esri-popup__main-container {
     border: 2px solid navy;
 }
 
