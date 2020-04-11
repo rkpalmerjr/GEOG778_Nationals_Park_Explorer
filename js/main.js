@@ -20,9 +20,20 @@ require([
     "esri/widgets/ScaleBar",
     "esri/widgets/Slider",
 ],
+
 // Main Function
 function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, GroupLayer, LabelClass, Home, Locate,
          Expand, BasemapToggle, BasemapGallery, LayerList, Search, ScaleBar, Slider) {
+
+    // Set the vh var based on teh visible area for mobile devices
+    var vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+    window.addEventListener('resize', () => {
+        var vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    });
+
     // Newspaper Basemap (Vector Tiles)
     var basemap = new Basemap({
         baseLayers: [
@@ -773,19 +784,23 @@ function(Map, MapView, FeatureFilter, Basemap, VectorTileLayer, FeatureLayer, Gr
     // https://developers.arcgis.com/javascript/latest/sample-code/popup-editaction/index.html
 
     //------------------------------------------------------------------------------------------------------------------
-    // Define Functions
-    //------------------------------------------------------------------------------------------------------------------
 
-    // function defineActionsLayerList(event) {
-    //
-    // };
+    // Add the modal functionality
+    var modal = document.querySelector(".modal");
+    var closeButton = document.querySelector(".close-button");
 
-    var vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    function toggleModal() {
+        modal.classList.toggle("show-modal");
+    }
 
-    window.addEventListener('resize', () => {
-        var vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-    });
+    function windowOnClick(event) {
+        if (event.target === modal) {
+            toggleModal();
+        }
+    }
+    closeButton.addEventListener("click", toggleModal);
+    window.addEventListener("click", windowOnClick);
 
+    // Toggle the modal to visible when the page loads
+    toggleModal();
 });
